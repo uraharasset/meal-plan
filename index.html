@@ -96,6 +96,9 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
 .auc .bt:disabled{opacity:.6}
 .lnk{background:none;border:0;color:#7dd3fc;font:500 14px 'Tajawal',sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:36px;padding:0 4px}
 .lnk:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.pl{flex:1;min-height:44px;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#94a3b8;font:600 13px 'Tajawal',sans-serif;cursor:pointer;padding:0 8px}
+.pl[aria-pressed=true]{background:#064e3b;border-color:#059669;color:#a7f3d0}
+.pl:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -117,7 +120,8 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
 
 <header>
   <h1 class="text-2xl font-extrabold text-white">خطة اليوم</h1>
-  <p class="lb">ميزانية 2200 سعرة · 4 وجبات</p>
+  <div role="group" aria-label="البرنامج الغذائي" style="display:flex;gap:6px;margin-top:10px"><button class="pl" type="button" data-p="3" aria-pressed="false">البرنامج الجديد · 3 وجبات</button><button class="pl" type="button" data-p="4" aria-pressed="false">القديم · 4 وجبات</button></div>
+  <p id="hb" class="lb" style="margin-top:8px">ميزانية 2200 سعرة · 3 وجبات</p>
   <p id="sy" class="lb" role="status" style="margin-top:2px">يحفظ على هذا الجهاز</p>
   <div id="ua" class="lb" hidden style="margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span id="ue" dir="ltr"></span><button id="uo" class="lnk" type="button">تسجيل الخروج</button></div>
   <section id="st" class="card" style="margin-top:10px" aria-label="سلسلة الالتزام">
@@ -134,7 +138,7 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
     <div id="sw" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:14px"></div>
     <div class="lb" style="margin-top:14px">إنجازات السلسلة</div>
     <div id="sbd" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:6px"></div>
-    <p class="lb" style="margin-top:12px;line-height:1.7">اليوم يحسب في السلسلة لما تكمّل وجباتك الأربع وتشرب 4 لترات. يوم الغش يوقفها بدون ما يكسرها، واليوم الناقص يكسرها.</p>
+    <p class="lb" style="margin-top:12px;line-height:1.7">اليوم يحسب في السلسلة لما تكمّل كل وجباتك وتشرب 4 لترات. يوم الغش يوقفها بدون ما يكسرها، واليوم الناقص يكسرها.</p>
   </section>
 
   <section class="card" style="margin-top:10px" aria-label="تقويم الأكل">
@@ -172,13 +176,14 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
       <div class="text-xs" style="color:#a7f3d0">الهدف اليومي</div>
     </div>
     <div class="mx" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      <div style="background:#022c22"><b class="e">165غ</b><span>بروتين</span></div>
-      <div style="background:#022c22"><b class="a">240غ</b><span>كارب</span></div>
-      <div style="background:#022c22"><b style="color:#fb923c">60غ</b><span>دهون</span></div>
+      <div style="background:#022c22"><b id="gp" class="e">165غ</b><span>بروتين</span></div>
+      <div style="background:#022c22"><b id="gc" class="a">240غ</b><span>كارب</span></div>
+      <div style="background:#022c22"><b id="gf" style="color:#fb923c">60غ</b><span>دهون</span></div>
     </div>
   </section>
 </header>
 
+<div id="planA">
 <section class="card">
   <div class="flex items-center justify-between"><h2 class="text-lg font-extrabold">🌅 الإفطار</h2><span class="lb">06:45 صباحاً · المنزل</span></div>
   <div class="it"><div class="lb">البروتين الأساسي</div><div class="main">3 بيضات كاملة <span class="e">135غ</span> بدون قشر</div>
@@ -220,6 +225,40 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
   <div class="mx"><div><b>506</b><span>سعرة</span></div><div><b class="e">29.9</b><span>بروتين</span></div><div><b class="a">56.1</b><span>كارب</span></div><div><b style="color:#fb923c">17.9</b><span>دهون</span></div></div>
 </section>
 
+</div>
+<template id="planB">
+<section class="card">
+  <div class="flex items-center justify-between"><h2 class="text-lg font-extrabold">🏫 الفطور / غداء المدرسة</h2><span class="lb">12:00 ظهراً</span></div>
+  <div class="it"><div class="lb">البروتين الأساسي</div><div class="main">علبة تونة بالماء <span class="e">120غ</span> + 3 بيضات مسلوقة</div>
+    <div class="sub"><p>بدائل اقتصادية</p><ul><li>220غ جبن قريش</li><li>180غ كبدة دجاج</li><li>200غ عدس مطبوخ + 3 بياض بيض</li></ul></div></div>
+  <div class="it"><div class="lb">الكربوهيدرات</div><div class="main"><span class="e">90غ</span> خبز قمح كامل + حبة موز <span class="e">100غ</span></div>
+    <div class="sub"><p>بدائل اقتصادية</p><ul><li>280غ بطاطس مسلوقة</li><li>235غ بطاطا حلوة</li></ul></div></div>
+  <div class="it"><div class="lb">الدهون والألياف</div><div class="main"><span class="e">15غ</span> كوكاو (فول سوداني) + خيار وطماطم</div></div>
+  <div class="mx"><div><b>764</b><span>سعرة</span></div><div><b class="e">64.7</b><span>بروتين</span></div><div><b class="a">69.9</b><span>كارب</span></div><div><b style="color:#fb923c">24.7</b><span>دهون</span></div></div>
+</section>
+
+<section class="card">
+  <div class="flex items-center justify-between"><h2 class="text-lg font-extrabold">🏋️ قبل التمرين</h2><span class="lb">05:00 مساءً</span></div>
+  <div class="it"><div class="lb">البروتين الأساسي</div><div class="main"><span class="e">250غ</span> كبدة دجاج مطبوخة <span class="lb">(من 295غ نيئة)</span></div>
+    <div class="sub"><p>بدائل اقتصادية</p><ul><li>240غ إسكالوب / صدور دجاج</li><li>260غ قانصة وقلوب دجاج</li><li>260غ سردين مشوي</li><li>5 بيضات مسلوقة + 1 بياض بيض</li></ul></div></div>
+  <div class="it"><div class="lb">الكربوهيدرات</div><div class="main"><span class="e">180غ</span> أرز مطبوخ + <span class="e">100غ</span> عدس مطبوخ</div>
+    <div class="sub"><p>بدائل اقتصادية (إجمالي الكارب)</p><ul><li>360غ بطاطس مسلوقة</li><li>305غ بطاطا حلوة</li><li>165غ معكرونة مسلوقة</li><li>150غ خبز قمح كامل</li></ul></div></div>
+  <div class="it"><div class="lb">الدهون والألياف</div><div class="main"><span class="e">15مل</span> زيت زيتون + سلطة ملفوف وخس</div></div>
+  <div class="mx"><div><b>759</b><span>سعرة</span></div><div><b class="e">67.0</b><span>بروتين</span></div><div><b class="a">71.4</b><span>كارب</span></div><div><b style="color:#fb923c">23.0</b><span>دهون</span></div></div>
+</section>
+
+<section class="card">
+  <div class="flex items-center justify-between"><h2 class="text-lg font-extrabold">🌙 العشاء والاستشفاء</h2><span class="lb">08:30 مساءً</span></div>
+  <div class="it"><div class="lb">البروتين الأساسي</div><div class="main"><span class="e">120غ</span> سكير + <span class="e">180غ</span> جبن قريش + <span class="e">200مل</span> حليب/لبن</div>
+    <div class="sub"><p>بدائل اقتصادية</p><ul><li>3 بيضات كاملة + 120غ سكير</li><li>140غ تونة بالماء + 200مل حليب</li><li>140غ كبدة دجاج</li></ul></div></div>
+  <div class="it"><div class="lb">الكربوهيدرات</div><div class="main"><span class="e">220غ</span> بطاطس مسلوقة</div>
+    <div class="sub"><p>بدائل اقتصادية</p><ul><li>165غ أرز مطبوخ</li><li>185غ بطاطا حلوة</li><li>70غ خبز قمح كامل</li></ul></div></div>
+  <div class="it"><div class="lb">الدهون الصحية</div><div class="main"><span class="e">20غ</span> كوكاو / فول سوداني</div></div>
+  <div class="mx"><div><b>663</b><span>سعرة</span></div><div><b class="e">50.1</b><span>بروتين</span></div><div><b class="a">67.1</b><span>كارب</span></div><div><b style="color:#fb923c">22.2</b><span>دهون</span></div></div>
+</section>
+
+</template>
+
 <section class="card" aria-label="متتبع الماء">
   <div class="flex items-center justify-between"><h2 class="text-lg font-extrabold" style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3.2c3.4 4.1 5.6 6.8 5.6 9.9a5.6 5.6 0 0 1-11.2 0c0-3.1 2.2-5.8 5.6-9.9z" fill="#38bdf8"/></svg>الماء</h2><b id="wt" style="font-size:15px">0.0 / 4 لتر</b></div>
   <div id="wg" class="wg"></div>
@@ -257,7 +296,24 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
 </main>
 <script>
 (function(){
-  var kcal=[426,563,697,506],P=[26.3,43.9,62.7,29.9],C=[45.1,67.0,81.8,56.1],F=[16.1,14.6,13.4,17.9];
+  window.PLANS={
+    '4':{n:4,kcal:[426,563,697,506],P:[26.3,43.9,62.7,29.9],C:[45.1,67.0,81.8,56.1],F:[16.1,14.6,13.4,17.9],T:{k:2200,p:165,c:240,f:60},
+         fixed:[['خيار','g',140],['طماطم','g',50],['زيت زيتون','ml',5],['ملفوف وخس','',0]]},
+    '3':{n:3,kcal:[764,759,663],P:[64.7,67,50.1],C:[69.9,71.4,67.1],F:[24.7,23,22.2],T:{k:2200,p:182,c:209,f:71},
+         fixed:[['كاكاو / فول سوداني','g',35],['زيت زيتون','ml',15],['خيار','',0],['طماطم','',0],['ملفوف وخس','',0]]}
+  };
+  var p='3';
+  try{p=localStorage.getItem('plan')||'3';}catch(e){}
+  if(p!=='3'&&p!=='4')p='3';
+  window.PLAN_ID=p;
+  var a=document.getElementById('planA'),t=document.getElementById('planB');
+  if(p==='3'){a.parentNode.replaceChild(t.content,a);t.parentNode&&t.parentNode.removeChild(t);}
+  else{while(a.firstChild)a.parentNode.insertBefore(a.firstChild,a);a.parentNode.removeChild(a);t.parentNode.removeChild(t);}
+})();
+</script>
+<script>
+(function(){
+  var PL=window.PLANS[window.PLAN_ID],kcal=PL.kcal,P=PL.P,C=PL.C,F=PL.F;
   var MN=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
   var DN=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   var WD=['سبت','أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة'];
@@ -283,6 +339,7 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
     document.querySelectorAll('#wg .wb').forEach(function(b,i){b.classList.toggle('on',i<n);b.setAttribute('aria-pressed',i<n?'true':'false');});
     document.getElementById('wt').textContent=(n*0.5).toFixed(1)+' / 4 لتر';
   }
+  function isFull(a){var n=a.filter(Boolean).length;return n>0&&n===a.length;}
   function save(d,a){try{localStorage.setItem(key(d),JSON.stringify(a));}catch(e){}mark(key(d));}
   var cards=Array.prototype.filter.call(document.querySelectorAll('main section.card'),function(s){return s.querySelector('.it');});
   function rem(el,target,eaten,unit,col){
@@ -298,10 +355,10 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
       b.setAttribute('aria-pressed',on?'true':'false');
       if(on){n++;k+=kcal[i];p+=P[i];c2+=C[i];f+=F[i];}
     });
-    rem('rk',2200,k,'','#f8fafc');rem('rp',165,p,'غ','#34d399');rem('rc',240,c2,'غ','#fbbf24');rem('rf',60,f,'غ','#fb923c');
-    document.getElementById('pt').textContent=n===4?'خلّصت وجبات اليوم 🎉':n+' من 4 وجبات';
-    document.getElementById('pk').textContent=k+' سعرة من 2200';
-    document.getElementById('pb').style.width=(n*25)+'%';
+    rem('rk',PL.T.k,k,'','#f8fafc');rem('rp',PL.T.p,p,'غ','#34d399');rem('rc',PL.T.c,c2,'غ','#fbbf24');rem('rf',PL.T.f,f,'غ','#fb923c');
+    document.getElementById('pt').textContent=n===cards.length?'خلّصت وجبات اليوم 🎉':n+' من '+cards.length+' وجبات';
+    document.getElementById('pk').textContent=k+' سعرة من '+PL.T.k;
+    document.getElementById('pb').style.width=(n*100/cards.length)+'%';
   }
   function renderCal(){
     document.getElementById('mt').textContent=MN[vm]+' '+vy;
@@ -313,13 +370,13 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
         var dt=new Date(vy,vm,d),a=load(dt),fu=dt>today,done=a.filter(Boolean).length,ch=cheat(dt),isT=dt.getTime()===today.getTime();
         var st='',tc='#e2e8f0',dc='#34d399',uc='#334155';
         if(ch){st='rd';tc='#fff';dc='#fff';uc='rgba(255,255,255,.35)';}
-        else if(done===4&&wget(dt)>=8){st='gd';tc='#022c22';dc='#022c22';uc='rgba(2,44,34,.3)';}
+        else if(isFull(a)&&wget(dt)>=8){st='gd';tc='#022c22';dc='#022c22';uc='rgba(2,44,34,.3)';}
         else if(done>0&&!fu){st='yl';tc='#1c1917';dc='#1c1917';uc='rgba(28,25,23,.3)';}
         var bt=document.createElement('button');bt.type='button';bt.style.color=tc;
-        var dots='';for(var i=0;i<4;i++){dots+='<i style="background:'+(a[i]?dc:uc)+'"></i>';}
+        var dots='';for(var i=0;i<(a.length||PL.n);i++){dots+='<i style="background:'+(a[i]?dc:uc)+'"></i>';}
         var w=wget(dt),nw=!fu&&w<8&&(done>0||ch||w>0);
         bt.innerHTML=d+'<span class="dr">'+dots+'</span>'+(nw?WMISS:(!fu&&w>=8?WOK:''));
-        bt.setAttribute('aria-label',d+' '+MN[vm]+'، '+(ch?'يوم غش':done+' من 4 وجبات')+(nw?'، لم تشرب كمية الماء كاملة':(!fu&&w>=8?'، شربت الماء كاملاً':'')));
+        bt.setAttribute('aria-label',d+' '+MN[vm]+'، '+(ch?'يوم غش':done+' من '+(a.length||PL.n)+' وجبات')+(nw?'، لم تشرب كمية الماء كاملة':(!fu&&w>=8?'، شربت الماء كاملاً':'')));
         if(st)bt.classList.add(st);
         if(isT)bt.classList.add('td');
         if(dt.getTime()===sel.getTime())bt.classList.add('sl');
@@ -334,7 +391,7 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
   }
   var WDS=['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'],MS=[3,7,14,30,60,100];
   function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
-  function stat(dt){if(cheat(dt))return 'c';var n=load(dt).filter(Boolean).length;return (n===4&&wget(dt)>=8)?'f':(n>0?'p':'n');}
+  function stat(dt){if(cheat(dt))return 'c';var a=load(dt),n=a.filter(Boolean).length;return (n>0&&n===a.length&&wget(dt)>=8)?'f':(n>0?'p':'n');}
   function firstDate(){
     var min=null;
     try{for(var i=0;i<localStorage.length;i++){
@@ -433,7 +490,7 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
     document.getElementById('sn').style.color=cur>0?TP.c2:'';
     document.getElementById('sp').style.background=cur>0?TP.c1:'#fb923c';
     var msg;
-    if(cur===0)msg='ابدأ سلسلتك اليوم: كمّل وجباتك الأربع واشرب 4 لترات.';
+    if(cur===0)msg='ابدأ سلسلتك اليوم: كمّل كل وجباتك واشرب 4 لترات.';
     else if(cur<3)msg='بداية قوية، كمّل بكرة.';
     else if(cur<7)msg='العادة بدأت تثبت، قربت من الأسبوع.';
     else if(cur<14)msg='أسبوع كامل وأكثر. استمر.';
@@ -638,12 +695,28 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
   document.querySelectorAll('.wc').forEach(function(b){
     b.onclick=function(){wr=+b.getAttribute('data-r');document.querySelectorAll('.wc').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});drawWeight();};
   });
+  (function(){
+    var T=PL.T;
+    document.getElementById('hb').textContent='ميزانية '+T.k+' سعرة · '+PL.n+' وجبات';
+    document.getElementById('gp').textContent=T.p+'غ';
+    document.getElementById('gc').textContent=T.c+'غ';
+    document.getElementById('gf').textContent=T.f+'غ';
+    document.querySelectorAll('.pl').forEach(function(b){
+      var p=b.getAttribute('data-p');
+      b.setAttribute('aria-pressed',p===window.PLAN_ID?'true':'false');
+      b.onclick=function(){
+        if(p===window.PLAN_ID)return;
+        try{localStorage.setItem('plan',p);}catch(e){}
+        location.reload();
+      };
+    });
+  })();
   showSel();
 })();
 </script>
 <script>
 (function(){
-  var KEY='swaps',slots=[];
+  var KEY=window.PLAN_ID==='3'?'swaps3':'swaps',slots=[];
   function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
   function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
   function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
@@ -674,8 +747,8 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
   }
   slots.forEach(function(s,n){var v=sw[n];s.i=(v>0&&v<s.opts.length)?v:0;render(s);});
 
-  var KW=[['بطاطا حلوة','بطاطا حلوة',0],['بطاطس','بطاطس',0],['جبن قريش','جبن قريش',0],['تونة','تونة',0],['عدس','عدس',1],['خبز','خبز قمح كامل',0],['شوفان','شوفان',0],['موز','موز',0],['كوكاو','كاكاو / فول سوداني',0],['زيت زيتون','زيت زيتون',0],['سمسم','سمسم',0],['كبدة','كبدة دجاج',2],['إسكالوب','صدور دجاج',1],['قانصة','قانصة وقلوب دجاج',1],['سردين','سردين',0],['أرز','أرز',1],['معكرونة','معكرونة',1],['لبن','لبن رايب / حليب',0]];
-  var CAT={'بيض':0,'جبن قريش':0,'تونة':0,'كبدة دجاج':0,'صدور دجاج':0,'قانصة وقلوب دجاج':0,'سردين':0,'لبن رايب / حليب':0,'عدس':1,'خبز قمح كامل':1,'أرز':1,'معكرونة':1,'بطاطس':1,'بطاطا حلوة':1,'شوفان':1,'موز':2,'خيار':2,'طماطم':2,'ملفوف وخس':2};
+  var KW=[['بطاطا حلوة','بطاطا حلوة',0],['بطاطس','بطاطس',0],['جبن قريش','جبن قريش',0],['تونة','تونة',0],['عدس','عدس',1],['خبز','خبز قمح كامل',0],['شوفان','شوفان',0],['موز','موز',0],['كوكاو','كاكاو / فول سوداني',0],['زيت زيتون','زيت زيتون',0],['سمسم','سمسم',0],['كبدة','كبدة دجاج',2],['إسكالوب','صدور دجاج',1],['قانصة','قانصة وقلوب دجاج',1],['سردين','سردين',0],['أرز','أرز',1],['معكرونة','معكرونة',1],['لبن','لبن رايب / حليب',0],['حليب','لبن رايب / حليب',0],['سكير','سكير',0]];
+  var CAT={'بيض':0,'جبن قريش':0,'تونة':0,'كبدة دجاج':0,'صدور دجاج':0,'قانصة وقلوب دجاج':0,'سردين':0,'لبن رايب / حليب':0,'سكير':0,'عدس':1,'خبز قمح كامل':1,'أرز':1,'معكرونة':1,'بطاطس':1,'بطاطا حلوة':1,'شوفان':1,'موز':2,'خيار':2,'طماطم':2,'ملفوف وخس':2};
   var CN=['البروتين','الكربوهيدرات','الخضار والفواكه','دهون وأخرى'];
   function parse(t,add){
     t.split('+').forEach(function(p){
@@ -703,7 +776,7 @@ body{background:#0f172a;font-family:'Tajawal',system-ui,sans-serif;color:#e2e8f0
     var agg={},done=ld('shop-done',[]);
     function add(b,u,a,suf){var o=agg[b]||(agg[b]={b:b,u:u,a:0,s:suf});o.a+=a;}
     slots.forEach(function(s){parse(s.opts[s.i].t,add);});
-    add('خيار','g',140,'');add('طماطم','g',50,'');add('زيت زيتون','ml',5,'');add('ملفوف وخس','',0,'');
+    window.PLANS[window.PLAN_ID].fixed.forEach(function(x){add(x[0],x[1],x[2],'');});
     cur=agg;shl.innerHTML='';
     [0,1,2,3].forEach(function(c){
       var ks=Object.keys(agg).filter(function(k){var v=CAT[k];return (v===undefined?3:v)===c;});
